@@ -29,6 +29,19 @@ source venv/bin/activate
 echo "Встановлення залежностей..."
 pip install -r requirements.txt
 
+# Запит користувача на API ключ і секрет
+echo "Будь ласка, введіть ваш API ключ:"
+read API_KEY
+echo "Будь ласка, введіть ваш API секрет:"
+read API_SECRET
+
+# Створення .env файлу
+echo "Створення .env файлу..."
+cat <<EOT > .env
+API_KEY=$API_KEY
+API_SECRET=$API_SECRET
+EOT
+
 # Створення скрипта для запуску програми
 echo "Створення скрипта для запуску..."
 cat <<EOT > start.sh
