@@ -30,9 +30,9 @@ echo "Встановлення залежностей..."
 pip install -r requirements.txt
 
 # Запит користувача на API ключ і секрет
-echo "Будь ласка, введіть ваш API ключ:"
+echo "Будь ласка, введіть ваш API ключ (Binance):"
 read API_KEY
-echo "Будь ласка, введіть ваш API секрет:"
+echo "Будь ласка, введіть ваш API секрет (Binance):"
 read API_SECRET
 
 # Створення .env файлу
@@ -53,6 +53,7 @@ EOT
 
 # Робимо start.sh виконуваним
 chmod +x start.sh
+cd pump_founder
 
 # Підсумок
 echo "Установка завершена. Для запуску програми використовуйте './start.sh'."

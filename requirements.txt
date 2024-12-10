@@ -1,0 +1,13 @@
+binance-connector==3.6.0
+binance-futures-connector==4.0.0
+certifi==2024.2.2
+charset-normalizer==3.3.2
+dotenv-python==0.0.1
+idna==3.6
+pip==23.2.1
+pycryptodome==3.20.0
+requests==2.31.0
+setuptools==68.2.0
+urllib3==2.2.1
+websocket-client==1.7.0
+wheel==0.41.2
