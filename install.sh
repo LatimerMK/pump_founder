@@ -28,6 +28,8 @@ source venv/bin/activate
 # Встановлення залежностей
 echo "Встановлення залежностей..."
 pip install -r requirements.txt
+pip install python-dotenv
+
 
 # Запит користувача на API ключ і секрет
 echo "Будь ласка, введіть ваш API ключ (Binance):"
