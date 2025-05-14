@@ -34,9 +34,9 @@ echo "Будь ласка, введіть ваш API ключ (Binance):"
 read API_KEY
 echo "Будь ласка, введіть ваш API секрет (Binance):"
 read API_SECRET
-echo "Будь ласка, введіть ваш API секрет (Binance):"
+echo "Будь ласка, введіть ваш TELEGRAM_BOT_TOKEN:"
 read TELEGRAM_BOT_TOKEN
-echo "Будь ласка, введіть ваш API секрет (Binance):"
+echo "Будь ласка, введіть ваш TELEGRAM_CHAT_ID:"
 read TELEGRAM_CHAT_ID
 
 # Створення .env файлу
