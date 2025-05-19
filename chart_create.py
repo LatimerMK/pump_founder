@@ -79,7 +79,7 @@ def find_significant_levels(df, order=10, min_diff_percent=1, max_crossings=2, l
 
 
 
-def plot_candlestick_with_levels(df, alines, save_path: str = "charts.png"):
+def plot_candlestick_with_levels(df, symbol, interval, alines, save_path: str = "charts.png"):
     df = df.copy()
     df.columns = [c.capitalize() for c in df.columns]  # Open, High, Low, Close, Volume
     #alines = []
@@ -119,6 +119,7 @@ def plot_candlestick_with_levels(df, alines, save_path: str = "charts.png"):
         alines=dict(alines=alines, colors=['green'] * len(alines), alpha=0.5, linewidths=[1] * len(alines)),
         ylabel='Price',
         volume=True,
+        title=f'{symbol} - {interval}',  # ← Додано заголовок
         figsize=(14, 6),
         tight_layout=True,
         savefig=dict(fname=save_path, dpi=300, bbox_inches='tight')

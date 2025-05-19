@@ -232,7 +232,7 @@ def pumpFound(timeToChange=2, procent=1, ignor=5):
             #current_price = df.iloc[-1]['close']
             levels, alines = find_significant_levels(df, order=25, min_diff_percent=1, max_crossings=2, lookback=5, )
 
-            plot_candlestick_with_levels(df, save_path=chart_path, alines=alines)
+            plot_candlestick_with_levels(df, symbol, interval=INTERVAL ,save_path=chart_path, alines=alines)
             send_alert(symbol, msg, chart_path)
 
 
