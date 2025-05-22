@@ -205,6 +205,16 @@ def pumpFound(timeToChange=2, procent=1, ignor=5):
         if abs(percent_change) >= procent:
             if symbol not in print_info:
                 print_info[symbol] = {"count": 0, "last_print_time": None}
+
+            INTERVAL = "5m"
+            LIMIT = 500
+            chart_path = f"charts/{symbol}.png"
+
+            df = get_klines(f"{symbol}", interval=INTERVAL, limit=LIMIT)
+            # current_price = df.iloc[-1]['close']
+            if len(df) < LIMIT * 0.5:
+                return
+
             print_info[symbol]["count"] += 1
             print_info[symbol]["last_print_time"] = now
             count = print_info[symbol]["count"]
@@ -221,17 +231,6 @@ def pumpFound(timeToChange=2, procent=1, ignor=5):
                 "signal":f"Сигнал: {count} |",
                 "config":f"{timeToChange}min{procent}%"
             }
-
-
-
-            INTERVAL = "5m"
-            LIMIT = 500
-            chart_path = f"charts/{symbol}.png"
-
-            df = get_klines(f"{symbol}", interval=INTERVAL, limit=LIMIT)
-            #current_price = df.iloc[-1]['close']
-            if len(df) < LIMIT * 0.5:
-                return
 
             levels, alines = find_significant_levels(df, order=25, min_diff_percent=1, max_crossings=2, lookback=5, )
 
