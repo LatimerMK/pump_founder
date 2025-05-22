@@ -230,6 +230,9 @@ def pumpFound(timeToChange=2, procent=1, ignor=5):
 
             df = get_klines(f"{symbol}", interval=INTERVAL, limit=LIMIT)
             #current_price = df.iloc[-1]['close']
+            if len(df) < LIMIT * 0.5:
+                return
+
             levels, alines = find_significant_levels(df, order=25, min_diff_percent=1, max_crossings=2, lookback=5, )
 
             plot_candlestick_with_levels(df, symbol, interval=INTERVAL ,save_path=chart_path, alines=alines)
