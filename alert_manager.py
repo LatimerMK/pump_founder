@@ -17,6 +17,6 @@ def format_channel_alert(symbol: str, msg: dict) -> str:
     alert += f"{msg['change_price']} "
     alert += f"{msg['signal']} "
     alert += f"{msg['config']}"
-    alert += f"{msg['hastag']}"
+    alert += f"{msg['hashtag']}"
 
     return alert.strip()
