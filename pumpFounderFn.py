@@ -229,7 +229,8 @@ def pumpFound(timeToChange=2, procent=1, ignor=5):
                 "percent_change":f"{percent_change:.2f} %",
                 "change_price": f"{old_price} > {new_price}",
                 "signal":f"Сигнал: {count} |",
-                "config":f"{timeToChange}min{procent}%"
+                "config":f"{timeToChange}min{procent}% ",
+                "hashtag": f"#{symbol}"
             }
 
             levels, alines = find_significant_levels(df, order=25, min_diff_percent=1, max_crossings=2, lookback=5, )
