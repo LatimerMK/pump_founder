@@ -7,8 +7,8 @@ import os
 load_dotenv()
 
 # Використання змінних середовища
-api_key = os.getenv("API_KEY")
-api_secret = os.getenv("API_SECRET")
+api_key = os.getenv("BINANCE_API_KEY")
+api_secret = os.getenv("BINANCE_API_SECRET")
 
 
 
@@ -26,3 +26,5 @@ UM_client = UMFutures(
     key=api_key,
     secret=api_secret
 )
+
+
