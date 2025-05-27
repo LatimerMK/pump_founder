@@ -196,7 +196,10 @@ def pumpFound(timeToChange=2, procent=1, ignor=5):
         percent_change = ((new_price - old_price) / old_price) * 100
 
         now = datetime.now()
-        if symbol in print_info and (now - print_info[symbol]["last_print_time"]).seconds < ignor * 60:
+        try:
+            if symbol in print_info and (now - print_info[symbol]["last_print_time"]).seconds < ignor * 60:
+                return
+        except Exception:
             return
 
         timestamp_formatted = datetime.fromtimestamp(timestamp / 1000).strftime("%H:%M:%S")
