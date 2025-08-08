@@ -2,6 +2,9 @@ import datetime
 import time
 from datetime import datetime, timedelta
 from datetime import datetime
+
+from binance.error import ClientError
+
 from api_connect import UM_client
 from dotenv import load_dotenv
 import os
@@ -213,7 +216,12 @@ def pumpFound(timeToChange=2, procent=1, ignor=5):
             LIMIT = 500
             chart_path = f"charts/{symbol}.png"
 
-            df = get_klines(f"{symbol}", interval=INTERVAL, limit=LIMIT)
+            try:
+
+                df = get_klines(f"{symbol}", interval=INTERVAL, limit=LIMIT)
+            except ClientError as e:
+                print(f"Помилка Binance API для символу {symbol}: {e}")
+                return
             # current_price = df.iloc[-1]['close']
             if len(df) < LIMIT * 0.5:
                 return
