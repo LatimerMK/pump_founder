@@ -90,6 +90,7 @@ def pumpFound1(timeToChange=2, procent=1, ignor=5):
 
     def getTickerUM():
         data = UM_client.ticker_price() # функція бінанса поертає 278 >> {'symbol': 'TOMOUSDT', 'price': '1.2792', 'time': 1699952397314}
+
         parsed_data = data
         num = 0
         for n in parsed_data:
@@ -187,8 +188,12 @@ def pumpFound(timeToChange=2, procent=1, ignor=5):
     print_info = {}   # symbol -> {count, last_print_time}
 
     def getTickerUM():
+        from binance.websocket.um_futures.websocket_client import UMFuturesWebsocketClient
         res = UM_client.ticker_price()  # [{'symbol': 'BTCUSDT', 'price': '12345.67', 'time': 1699952397314}, ...]
         #print(res)
+        #d = UM_client.index_info()
+        d = UM_client.exchange_info()
+        print(d)
         return res
 
 
