@@ -11,7 +11,8 @@ touch .env
 ```
 
 У .env додати:
-
+- BINANCE_API_KEY=
+- BINANCE_API_SECRET=
 - TELEGRAM_BOT_TOKEN=<ваш токен>
 - TELEGRAM_CHAT_ID=<id чату>
 
