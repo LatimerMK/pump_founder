@@ -2,7 +2,7 @@
 
 ```bash
 git clone https://github.com/yourusername/pump_founder.git
-cd paradex_option_mon
+cd pump_founder
 python3 -m venv .venv
 source .venv/bin/activate   # Linux/macOS<br>
 .venv\Scripts\activate       # Windows<br>
