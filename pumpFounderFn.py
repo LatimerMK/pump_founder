@@ -2,11 +2,16 @@ import datetime
 import time
 from datetime import datetime, timedelta
 from datetime import datetime
+
+from binance.error import ClientError
+
 from api_connect import UM_client
 from dotenv import load_dotenv
 import os
 import requests
-
+from binance_api import get_klines
+from chart_create import find_significant_levels, plot_candlestick_with_levels
+from alert_manager import send_alert
 # Завантажити змінні з .env
 load_dotenv()
 
@@ -47,6 +52,7 @@ buffer_lock = threading.Lock()
 SEND_INTERVAL = 5  # Кожні 5 секунд
 MAX_MESSAGE_LENGTH = 4000  # Безпечна межа, трохи нижче 4096
 
+
 def buffer_worker():
     while True:
         time.sleep(SEND_INTERVAL)
@@ -84,6 +90,7 @@ def pumpFound1(timeToChange=2, procent=1, ignor=5):
 
     def getTickerUM():
         data = UM_client.ticker_price() # функція бінанса поертає 278 >> {'symbol': 'TOMOUSDT', 'price': '1.2792', 'time': 1699952397314}
+
         parsed_data = data
         num = 0
         for n in parsed_data:
@@ -181,18 +188,26 @@ def pumpFound(timeToChange=2, procent=1, ignor=5):
     print_info = {}   # symbol -> {count, last_print_time}
 
     def getTickerUM():
+        from binance.websocket.um_futures.websocket_client import UMFuturesWebsocketClient
         res = UM_client.ticker_price()  # [{'symbol': 'BTCUSDT', 'price': '12345.67', 'time': 1699952397314}, ...]
         #print(res)
+        #d = UM_client.index_info()
+        d = UM_client.exchange_info()
+        print(d)
         return res
 
 
     def check_price_change(symbol, new_price, old_price, timestamp):
+
         new_price = float(new_price)
         old_price = float(old_price)
         percent_change = ((new_price - old_price) / old_price) * 100
 
         now = datetime.now()
-        if symbol in print_info and (now - print_info[symbol]["last_print_time"]).seconds < ignor * 60:
+        try:
+            if symbol in print_info and (now - print_info[symbol]["last_print_time"]).seconds < ignor * 60:
+                return
+        except Exception:
             return
 
         timestamp_formatted = datetime.fromtimestamp(timestamp / 1000).strftime("%H:%M:%S")
@@ -201,6 +216,21 @@ def pumpFound(timeToChange=2, procent=1, ignor=5):
         if abs(percent_change) >= procent:
             if symbol not in print_info:
                 print_info[symbol] = {"count": 0, "last_print_time": None}
+
+            INTERVAL = "5m"
+            LIMIT = 500
+            chart_path = f"charts/{symbol}.png"
+
+            try:
+
+                df = get_klines(f"{symbol}", interval=INTERVAL, limit=LIMIT)
+            except ClientError as e:
+                print(f"Помилка Binance API для символу {symbol}: {e}")
+                return
+            # current_price = df.iloc[-1]['close']
+            if len(df) < LIMIT * 0.5:
+                return
+
             print_info[symbol]["count"] += 1
             print_info[symbol]["last_print_time"] = now
             count = print_info[symbol]["count"]
@@ -208,8 +238,29 @@ def pumpFound(timeToChange=2, procent=1, ignor=5):
             color = "🟢" if percent_change > 0 else "🔴"
             url = f"https://www.coinglass.com/tv/Binance_{symbol}"
             print(f"{timestamp_formatted}   {symbol_str} Ціна {percent_change:.2f}%  {old_price}  >>>  {new_price}  Сигнал: {count} {url}")
-            msg = f"[{color}{symbol}](https://www.coinglass.com/tv/Binance_{symbol}) {percent_change:.2f} %  {old_price} > {new_price}  Сигнал: {count} | {timeToChange}min{procent}%"
-            add_to_buffer(msg)
+            #msg = f"[{color}{symbol}](https://www.coinglass.com/tv/Binance_{symbol}) {percent_change:.2f} %  {old_price} > {new_price}  Сигнал: {count} | {timeToChange}min{procent}%"
+###########################################################################
+            msg = {
+                "link": f"<a href='https://www.coinglass.com/tv/Binance_{symbol}'>{color}{symbol}</a>", #f"[{color}{symbol}](https://www.coinglass.com/tv/Binance_{symbol})",
+                "percent_change":f"{percent_change:.2f} %",
+                "change_price": f"{old_price} > {new_price}",
+                "signal":f"Сигнал: {count} |",
+                "config":f"{timeToChange}min{procent}% ",
+                "hashtag": f"#{symbol}"
+            }
+
+            levels, alines = find_significant_levels(df, order=25, min_diff_percent=1, max_crossings=2, lookback=5, )
+
+            plot_candlestick_with_levels(df, symbol, interval=INTERVAL ,save_path=chart_path, alines=alines)
+            send_alert(symbol, msg, chart_path)
+
+
+
+
+
+
+
+            #add_to_buffer(msg)
 
     def foundPumpFn():
         while True:
