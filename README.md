@@ -35,7 +35,7 @@ sudo nano /etc/systemd/system/pump_founder.service
 
 ```ini
 [Unit]
-Description=Trade option project auto start
+Description=Pump founder project auto start
 After=network.target
 
 [Service]
